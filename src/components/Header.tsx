@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type HeaderProps = {
+  open: boolean;
   onSideBarOpen: () => void;
 };
 
@@ -52,7 +53,7 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
     <AppBar
       position="fixed"
       className={clsx(classes.appBar, {
-        [classes.appBarShift]: open,
+        [classes.appBarShift]: props.open,
       })}
     >
       <Toolbar>
@@ -61,7 +62,7 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
           aria-label="open drawer"
           onClick={handleSideBarOpen}
           edge="start"
-          className={clsx(classes.menuButton, open && classes.hide)}
+          className={clsx(classes.menuButton, props.open && classes.hide)}
         >
           <MenuIcon />
         </IconButton>

@@ -51,7 +51,7 @@ const Main: React.FC = () => {
 
   return (
     <div className={classes.root}>
-      <Header onSideBarOpen={handleSideBarOpen} />
+      <Header open={open} onSideBarOpen={handleSideBarOpen} />
       <SideBar open={open} onClose={handleSideBarClose} />
       <main
         className={clsx(classes.content, {

@@ -20,7 +20,7 @@ import {
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import { Shop } from '@src/models/Shop';
-import { Item } from '@src/models/Item';
+import { Item } from '@src/models/Items';
 import { useAppDispatch } from '@src/stores/index';
 import { fetchItems, fetchShops, createItem, updateItem, deleteItem } from '@src/stores/shops';
 

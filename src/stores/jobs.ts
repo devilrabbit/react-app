@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { Item } from '@src/models/Item';
+import { Item } from '@src/models/Items';
 import { ThunkApi } from './index';
 import { Job } from '@src/models/Job';
 import { toDataUrl } from '@src/utils/images';

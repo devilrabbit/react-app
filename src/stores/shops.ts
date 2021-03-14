@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Shop } from '@src/models/Shop';
-import { Item } from '@src/models/Item';
+import { Item } from '@src/models/Items';
 import { toBase64 } from '@src/utils/files';
+import { ThunkApi } from './index';
 
 export interface ShopsState {
   loading: boolean;
@@ -33,31 +34,40 @@ export const fetchItems = createAsyncThunk<Item[], string>('shops/fetchItems', a
   ];
 });
 
-export type PostItemArgs = {
+export type CreateItemArgs = {
   item: Partial<Item>;
   file: File;
 };
 
-export const createItem = createAsyncThunk<Item, PostItemArgs>('shops/createItem', async (args) => {
-  const item = args.item;
-  const data = await toBase64(args.file);
-  const json = {
-    ...item,
-    data,
-  };
-  console.log(json);
-  return { id: 'i005', name: item.name || '', description: item.description || '' };
-});
-
-export const updateItem = createAsyncThunk<void, Partial<Item>>(
-  'shops/updateItem',
-  async (item) => {
-    console.log(item);
+export const createItem = createAsyncThunk<Item, CreateItemArgs, ThunkApi>(
+  'shops/createItem',
+  async (args) => {
+    const item = args.item;
+    const data = await toBase64(args.file);
+    const json = {
+      ...item,
+      data,
+    };
+    console.log(json);
+    return Promise.resolve({
+      id: 'i005',
+      name: item.name || '',
+      description: item.description || '',
+    });
   },
 );
 
-export const deleteItem = createAsyncThunk<void, Item>('shops/deleteItem', async (item) => {
+export const updateItem = createAsyncThunk<Partial<Item>, Partial<Item>>(
+  'shops/updateItem',
+  async (item) => {
+    console.log(item);
+    return item;
+  },
+);
+
+export const deleteItem = createAsyncThunk<string, Item>('shops/deleteItem', async (item) => {
   console.log(item);
+  return item.id;
 });
 
 const slice = createSlice({
@@ -135,7 +145,56 @@ const slice = createSlice({
       return {
         ...state,
         loading: false,
+        error: action.error.message,
+      };
+    });
+    builder.addCase(updateItem.pending, (state) => {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    });
+    builder.addCase(updateItem.fulfilled, (state, action) => {
+      return {
+        ...state,
+        loading: false,
+        items: state.items.map((x) => {
+          if (x.id === action.payload.id) {
+            return Object.assign({}, action.payload, x) as Item;
+          }
+          return x;
+        }),
+        error: null,
+      };
+    });
+    builder.addCase(updateItem.rejected, (state, action) => {
+      return {
+        ...state,
+        loading: false,
         items: [],
+        error: action.error.message,
+      };
+    });
+    builder.addCase(deleteItem.pending, (state) => {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    });
+    builder.addCase(deleteItem.fulfilled, (state, action) => {
+      return {
+        ...state,
+        loading: false,
+        items: state.items.filter((x) => x.id !== action.payload),
+        error: null,
+      };
+    });
+    builder.addCase(deleteItem.rejected, (state, action) => {
+      return {
+        ...state,
+        loading: false,
         error: action.error.message,
       };
     });

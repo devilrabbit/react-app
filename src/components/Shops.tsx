@@ -1,5 +1,6 @@
 import React, { useState, useEffect, ChangeEvent, useCallback } from 'react';
-import { useSelector, useDispatch, RootStateOrAny } from 'react-redux';
+import { useSelector, RootStateOrAny } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -19,7 +20,8 @@ import {
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import { Shop } from '@src/models/Shop';
-import { Item } from '@src/models/Item';
+import { Item } from '@src/models/Items';
+import { useAppDispatch } from '@src/stores/index';
 import { fetchItems, fetchShops, createItem, updateItem, deleteItem } from '@src/stores/shops';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -52,7 +54,7 @@ const Shops: React.FC = () => {
 
   const shops = useSelector((state: RootStateOrAny) => state.shops.shops);
   const items = useSelector((state: RootStateOrAny) => state.shops.items);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(fetchShops());
@@ -66,17 +68,23 @@ const Shops: React.FC = () => {
     }
   }, [selectedItem]);
 
-  const handleShopClick = (shopId: string) => {
-    setSelectedShopId(shopId);
-    setSelectedItem(undefined);
-    dispatch(fetchItems(shopId));
-  };
+  const handleShopClick = useCallback(
+    (shopId: string) => {
+      setSelectedShopId(shopId);
+      setSelectedItem(undefined);
+      dispatch(fetchItems(shopId));
+    },
+    [dispatch],
+  );
   const handleItemClick = (item: Item | undefined) => {
     setSelectedItem(item);
   };
-  const handleItemDelete = (item: Item) => {
-    dispatch(deleteItem(item));
-  };
+  const handleItemDelete = useCallback(
+    (item: Item) => {
+      dispatch(deleteItem(item));
+    },
+    [dispatch],
+  );
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -95,11 +103,14 @@ const Shops: React.FC = () => {
       if (!file) {
         return;
       }
-      await dispatch(createItem({ item: { name, description }, file }));
+      const item = await dispatch(createItem({ item: { name, description }, file })).then(
+        unwrapResult,
+      );
+      setSelectedItem(item);
     } else {
-      await dispatch(updateItem({ name, description }));
+      dispatch(updateItem({ name, description }));
     }
-  }, [name, description, file]);
+  }, [dispatch, name, description, file]);
 
   return (
     <div className={classes.root}>

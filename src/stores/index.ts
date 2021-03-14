@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux';
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './auth';
+import shopsReducer from './shops';
 
 const reducer = combineReducers({
   auth: authReducer,
+  shops: shopsReducer,
 });
 
 const store = configureStore({ reducer });

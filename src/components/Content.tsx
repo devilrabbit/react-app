@@ -1,7 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch } from 'react-router-dom';
-import { PrivateRoute, GuestRoute } from './routes';
-import Customers from './Customers';
+import { Switch } from 'react-router-dom';
+import { PrivateRoute } from './routes';
+import Shops from './Shops';
 import Users from './Users';
 
 const Content: React.FC = () => {
@@ -10,8 +10,8 @@ const Content: React.FC = () => {
       <PrivateRoute path="/users" exact>
         <Users />
       </PrivateRoute>
-      <PrivateRoute path="/customers" exact>
-        <Customers />
+      <PrivateRoute path="/shops" exact>
+        <Shops />
       </PrivateRoute>
     </Switch>
   );

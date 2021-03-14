@@ -62,13 +62,13 @@ const SideBar: React.FC<SideBarProps> = (props: SideBarProps) => {
       </div>
       <Divider />
       <List>
-        <ListItem button key={'customers'} component={Link} to="/customers">
+        <ListItem button key={'shops'} component={Link} to="./shops">
           <ListItemIcon>
             <InboxIcon />
           </ListItemIcon>
-          <ListItemText primary={'Customers'} />
+          <ListItemText primary={'Shops'} />
         </ListItem>
-        <ListItem button key={'users'} component={Link} to="/users">
+        <ListItem button key={'users'} component={Link} to="./users">
           <ListItemIcon>
             <MailIcon />
           </ListItemIcon>

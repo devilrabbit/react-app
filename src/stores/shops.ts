@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Shop } from '@src/models/Shop';
-import { Item } from '@src/models/Items';
+import { Item } from '@src/models/Item';
 import { toBase64 } from '@src/utils/files';
 import { ThunkApi } from './index';
 

@@ -8,13 +8,22 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@reduxjs/toolkit": "^1.5.0",
+    "@types/react-vis": "^1.11.6",
+    "axios": "^0.21.1",
+    "buffer": "^6.0.3",
+    "d3": "^6.6.1",
     "openseadragon": "^2.4.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-redux": "^7.2.2",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "react-vis": "^1.11.7",
+    "recharts": "^2.0.9",
+    "uuid": "^3.4.0"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/d3": "^6.3.0",
     "@types/jest": "^26.0.20",
     "@types/node": "^14.14.20",
     "@types/openseadragon": "^2.4.5",
@@ -22,8 +31,10 @@
     "@types/react-dom": "^17.0.0",
     "@types/react-redux": "^7.1.15",
     "@types/react-router-dom": "^5.1.7",
+    "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.12.0",
     "@typescript-eslint/parser": "^4.12.0",
+    "axios-mock-server": "^0.19.1",
     "css-loader": "^5.0.1",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^7.1.0",
@@ -60,7 +71,8 @@
     "lint:prettier": "prettier -l \"**/*.{json,md,yml}\"",
     "lint:type": "tsc --noEmit",
     "test": "run-s lint test:*",
-    "test:unit": "jest"
+    "test:unit": "jest",
+    "mock:build": "axios-mock-server -b"
   },
   "author": "",
   "license": "ISC"

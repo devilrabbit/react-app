@@ -1,0 +1,46 @@
+.operation {
+  circle,
+  polyline,
+  rect {
+    stroke-width: 3px;
+    vector-effect: non-scaling-stroke;
+  }
+
+  circle {
+    fill: #00000001;
+  }
+
+  polyline,
+  rect {
+    fill: transparent;
+    pointer-events: none;
+  }
+
+  .zero circle {
+    stroke: steelblue;
+  }
+
+  .white circle {
+    stroke: white;
+  }
+
+  .points circle {
+    stroke: green;
+  }
+
+  .lines circle {
+    stroke: rebeccapurple;
+  }
+
+  .lines polyline {
+    stroke: rebeccapurple;
+  }
+
+  .areas circle {
+    stroke: yellowgreen;
+  }
+
+  .areas rect {
+    stroke: yellowgreen;
+  }
+}

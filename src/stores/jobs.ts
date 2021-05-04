@@ -1,12 +1,16 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Item } from '@src/models/Items';
 import { ThunkApi } from './index';
 import { Job } from '@src/models/Job';
 import { toDataUrl } from '@src/utils/images';
+import { UUID } from '@src/utils/uuid';
+import { createOperationSet } from '@src/models/Operation';
+import { createResultSet } from '@src/models/Result';
 
 export interface JobState {
   loading: boolean;
   jobs: Job[];
+  selectedJob?: Job;
   error?: any;
 }
 
@@ -20,12 +24,15 @@ export const fetchJobs = createAsyncThunk<Job[]>('jobs/fetchJobs', async () => {
 });
 
 export const createJob = createAsyncThunk<Job, File, ThunkApi>('jobs/createJob', async (file) => {
+  const id = UUID.generateShort();
   const data = await toDataUrl(file);
-  return Promise.resolve({
-    id: 'j0001',
+  return {
+    id,
     name: file.name,
     image: data,
-  });
+    operations: createOperationSet(id),
+    results: createResultSet(id),
+  };
 });
 
 export const deleteJob = createAsyncThunk<string, Item>('jobs/deleteJob', async (item) => {
@@ -36,7 +43,21 @@ export const deleteJob = createAsyncThunk<string, Item>('jobs/deleteJob', async 
 const slice = createSlice({
   name: 'jobs',
   initialState,
-  reducers: {},
+  reducers: {
+    selectJob: (state, action: PayloadAction<Job | undefined>) => {
+      return {
+        ...state,
+        selectedJob: action.payload,
+      };
+    },
+    saveJob: (state, action: PayloadAction<Job>) => {
+      const newJob = action.payload;
+      return {
+        ...state,
+        jobs: state.jobs.map((job) => (job.id == newJob.id ? newJob : job)),
+      };
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchJobs.pending, (state) => {
       return {
@@ -74,6 +95,7 @@ const slice = createSlice({
         ...state,
         loading: false,
         jobs: state.jobs.concat(action.payload),
+        selectedJob: action.payload,
         error: null,
       };
     });
@@ -110,3 +132,4 @@ const slice = createSlice({
 });
 
 export default slice.reducer;
+export const { selectJob, saveJob } = slice.actions;

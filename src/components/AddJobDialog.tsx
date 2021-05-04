@@ -21,9 +21,7 @@ interface Props {
 
 const AddJobDialog: React.FC<Props> = (props: Props) => {
   const { onClose, open } = props;
-  const [selectedType, setSelectedType] = useState('file');
   const [selectedFile, setSelectedFile] = useState<File>();
-  const [jobId, setJobId] = useState<string>('');
   const [inputElement, setInputElement] = useState<HTMLInputElement>();
 
   useEffect(() => {
@@ -37,14 +35,6 @@ const AddJobDialog: React.FC<Props> = (props: Props) => {
     onClose(false);
   };
 
-  const handleTypeChange = (e: any) => {
-    setSelectedType(e.target.value);
-  };
-
-  const handleIdChange = (e: any) => {
-    setJobId(e.target.value);
-  };
-
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target && e.target.files) {
       const file = e.target.files[0];
@@ -53,64 +43,24 @@ const AddJobDialog: React.FC<Props> = (props: Props) => {
   };
 
   const handleSubmit = useCallback(() => {
-    switch (selectedType) {
-      case 'file':
-        if (!selectedFile) {
-          return;
-        }
-        dispatch(createJob(selectedFile));
-        break;
-      case 'input':
-        if (!jobId) {
-          return;
-        }
-        //dispatch(submitAsync({ jobId, profile }));
-        break;
-      default:
-        break;
+    if (!selectedFile) {
+      return;
     }
+    dispatch(createJob(selectedFile));
     props.onClose(true);
-  }, [props, dispatch]);
+  }, [props, dispatch, selectedFile]);
 
   return (
     <Dialog onClose={handleClose} open={open} fullWidth>
       <DialogTitle>Add image</DialogTitle>
       <DialogContent>
         <Grid>
-          <Box>
-            <Radio
-              checked={selectedType === 'file'}
-              onChange={handleTypeChange}
-              value="file"
-              name="input-radio-button"
-            />
-            <Input
-              type="file"
-              disabled={selectedType !== 'file'}
-              onChange={handleFileChange}
-              inputRef={(el) => setInputElement(el)}
-            />
-          </Box>
-          <Box>
-            <Radio
-              checked={selectedType === 'input'}
-              onChange={handleTypeChange}
-              value="input"
-              name="input-radio-button"
-            />
-            <TextField
-              label="Enter Id"
-              disabled={selectedType !== 'input'}
-              onChange={handleIdChange}
-              value={jobId}
-              margin="normal"
-            />
-          </Box>
+          <Input type="file" onChange={handleFileChange} inputRef={(el) => setInputElement(el)} />
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button color="primary" disabled={!selectedFile && !jobId} onClick={handleSubmit}>
-          Submit
+        <Button color="primary" disabled={!selectedFile} onClick={handleSubmit}>
+          Add
         </Button>
       </DialogActions>
     </Dialog>

@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -40,6 +41,9 @@ module.exports = {
   },
   target: ["web", "es5"],
   plugins: [
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+    }),
     new HtmlWebpackPlugin({
       title: 'hello react',
       template: path.resolve(__dirname, './src/index.html'),

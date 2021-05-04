@@ -20,7 +20,7 @@ const ImageViewer: React.FC<ImageViewerProps> = (props: ImageViewerProps) => {
         },
       });
     }
-  }, [props, viewer]);
+  }, [props.image, viewer]);
 
   const destruct = () => {
     if (viewer) {

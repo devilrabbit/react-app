@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
-import { useSelector, RootStateOrAny } from 'react-redux';
-import { Link } from 'react-router-dom';
+import React, { useState, useCallback, useEffect } from 'react';
+import { useSelector, RootStateOrAny, useDispatch } from 'react-redux';
+import { Link, useHistory } from 'react-router-dom';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -18,6 +18,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import AddIcon from '@material-ui/icons/Add';
 import { Collapse } from '@material-ui/core';
 import { Job } from '@src/models/Job';
+import { selectJob } from '@src/stores/jobs';
 
 const drawerWidth = 240;
 
@@ -54,12 +55,24 @@ const SideBar: React.FC<SideBarProps> = (props: SideBarProps) => {
   const [previewOpen, setPreviewOpen] = useState(true);
 
   const jobs = useSelector((state: RootStateOrAny) => state.jobs.jobs);
+  const selectedJob = useSelector((state: RootStateOrAny) => state.jobs.selectedJob);
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (selectedJob) {
+      history.push(`/jobs/${selectedJob.id}`);
+    }
+  }, [selectedJob]);
 
   const handleDrawerClose = useCallback(() => {
     props.onClose();
   }, [props]);
   const handlePreviewClick = () => {
     setPreviewOpen(!previewOpen);
+  };
+  const handleJobClick = (job: Job) => {
+    dispatch(selectJob(job));
   };
   const handleAddClick = useCallback(() => {
     props.onOpenAddDialog();
@@ -106,9 +119,9 @@ const SideBar: React.FC<SideBarProps> = (props: SideBarProps) => {
             {jobs.map((job: Job) => {
               return (
                 <ListItem
+                  key={job.id}
                   button
-                  component={Link}
-                  to={`./jobs/${job.id}`}
+                  onClick={() => handleJobClick(job)}
                   className={classes.nested}
                 >
                   <ListItemText primary={job.name} />

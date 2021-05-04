@@ -4,11 +4,15 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './auth';
 import shopsReducer from './shops';
 import jobsReducer from './jobs';
+import operationsReducer from './operations';
+import resultsReducer from './results';
 
 const reducer = combineReducers({
   auth: authReducer,
   shops: shopsReducer,
   jobs: jobsReducer,
+  operations: operationsReducer,
+  results: resultsReducer,
 });
 
 const store = configureStore({ reducer });
